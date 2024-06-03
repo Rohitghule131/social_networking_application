@@ -287,21 +287,42 @@ class FriendRequestActionAPIView(RetrieveAPIView):
             request_action = request.GET.get("request_action")
             if request_action == "SEND":
                 requested_to = request.GET.get("requested_to")
+
                 if requested_to is None:
+                    # Check for request_to param.
                     raise CustomException(messages.REQUIRED.format("requested_to param"))
+
+                if int(requested_to) == request.user.id:
+                    # If user sends friend request to him self raise following exception.
+                    raise CustomException(messages.REQUIRED.format("Other user id"))
 
                 data = {
                     "requested_by": request.user.id,
                     "requested_to": requested_to
                 }
 
-                friend_request_serializer = self.get_serializer(data=data)
+                # Following query for let's assume that vice versa relation exist in friend request table
+                # Then another friend request entry is invalid to prevent this situation
+                # added following check.
 
-                if friend_request_serializer.is_valid(raise_exception=True):
-                    friend_request_serializer.save()
+                is_request_object_exist = FriendRequests.objects.filter(
+                    requested_to=data["requested_by"], requested_by=data["requested_to"]).first()
 
-                    self.response_format["status_code"] = status.HTTP_201_CREATED
-                    self.response_format["message"] = messages.FRIEND_REQUEST.format("send")
+                if is_request_object_exist:
+
+                    self.response_format["error"] = "Friend Request"
+                    self.response_format["status_code"] = status.HTTP_400_BAD_REQUEST
+                    self.response_format["message"] = messages.ALREADY_EXIST.format("Friend request")
+
+                else:
+
+                    friend_request_serializer = self.get_serializer(data=data)
+
+                    if friend_request_serializer.is_valid(raise_exception=True):
+                        friend_request_serializer.save()
+
+                        self.response_format["status_code"] = status.HTTP_201_CREATED
+                        self.response_format["message"] = messages.FRIEND_REQUEST.format("send")
 
             else:
                 if request.GET.get("request_id"):

@@ -1,5 +1,6 @@
 REQUIRED = "{} is required."
 LOGIN = "Logged in successfully."
+ALREADY_EXIST = "{} already exist."
 DOES_NOT_EXIST = "{} does not exist."
 SIGNUP = "Sign-up completed successfully."
 FETCHED_SUCCESS = "{} fetched successfully."
