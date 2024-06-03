@@ -55,7 +55,7 @@ class SignUpUserAPIView(CreateAPIView):
         sign_up_serializer = self.get_serializer(data=request.data)
 
         if sign_up_serializer.is_valid(raise_exception=True):
-            print(sign_up_serializer.validated_data)
+
             user_object = sign_up_serializer.save()
 
             user_jwt_token = get_tokens_for_user(user_object)
@@ -262,7 +262,6 @@ class FriendRequestActionAPIView(RetrieveAPIView):
         """
         Method for check permission on a friend request object.
         """
-        print(obj.requested_to.id, request.user.id)
         if (obj.requested_to.id == request.user.id and
                 (request.GET.get("request_action") == "ACCEPT" or request.GET.get("request_action") == "REJECT")):
 
