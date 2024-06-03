@@ -26,7 +26,7 @@ or HTTPS
 
 git clone https://github.com/Rohitghule131/social_networking_application.git
 
-cd ./social_networking_application
+cd ./social_networking_application/social_networking
 
 ## Docker Setup
 
@@ -38,7 +38,7 @@ docker build -t social_networking_application .
 2. Run Docker Container
 To run the Docker container, use the following command:
 
-docker run -d -p 8000:8000 social_networking_application
+docker run -p 8000:8000 social_networking_application
 
 This will start your Django project and make it accessible at http://localhost:8000.
 
