@@ -1,0 +1,7 @@
+# Compiled Python bytecode
+*.py[cod]
+
+# JetBrains IDE
+.idea/
+venv
+.env
