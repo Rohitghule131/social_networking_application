@@ -18,7 +18,14 @@ This is a Django project containerized with Docker.
 
 Clone the repository:
 
-git clone https://github.com/yourusername/your-django-project.git
+you can clone with SSH
+
+git clone git@github.com:Rohitghule131/social_networking_application.git
+
+or HTTPS
+
+git clone https://github.com/Rohitghule131/social_networking_application.git
+
 cd ./social_networking_application
 
 ## Docker Setup
