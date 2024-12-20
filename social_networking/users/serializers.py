@@ -8,6 +8,7 @@ from utilities.messages import (
     EMAIL_UNIQUE,
     VALID_PASSWORD
 )
+from chat.serializers import CreateChatConnectionSerializer
 
 
 class SignUpUserSerializer(serializers.ModelSerializer):
@@ -133,3 +134,13 @@ class FriendRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendRequests
         fields = ("id", "requested_to", "requested_by")
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    Class for retreive user details.
+    """
+
+    class Meta:
+        model = CustomUser
+        fields = "__all__"

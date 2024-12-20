@@ -23,7 +23,7 @@ from .serializers import (
     LoginUserSerializer,
     SignUpUserSerializer,
     UserDetailSerializer,
-    FriendRequestSerializer,
+    FriendRequestSerializer,UserDetailsSerializer,
     ListFriendRequestSerializer,
     ListPendingFriendRequestSerializer
 )
@@ -31,6 +31,7 @@ from .models import (
     CustomUser,
     FriendRequests
 )
+from chat.models import ChatConnection
 
 
 class SignUpUserAPIView(CreateAPIView):
@@ -368,5 +369,39 @@ class FriendRequestActionAPIView(RetrieveAPIView):
             self.response_format["error"] = "friend request"
             self.response_format["status_code"] = status.HTTP_400_BAD_REQUEST
             self.response_format["message"] = messages.DOES_NOT_EXIST.format("Friend request")
+
+        return Response(self.response_format, status=self.response_format["status_code"])
+
+
+class UserDetailsAPIView(ListAPIView):
+    """
+    Class for create friends user list api.
+    """
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    serializer_class = UserDetailsSerializer
+
+    def __init__(self, **kwargs):
+        """
+        Constructor method for configuring response format.
+        """
+        self.response_format = ResponseInfo().response
+        super(UserDetailsAPIView, self).__init__(**kwargs)
+
+    def get_queryset(self):
+        """
+        Method for get user objects queryset.
+        """
+        return CustomUser.objects.filter(id=self.request.user.id)
+
+    def get(self, request, *args, **kwargs):
+        """
+        GET method for return the list of friend users in response.
+        """
+        list_friend_users_serializer = super().get(request, *args, **kwargs)
+
+        self.response_format["data"] = list_friend_users_serializer.data
+        self.response_format["status_code"] = status.HTTP_200_OK
+        self.response_format["message"] = messages.FETCHED_SUCCESS.format("User details")
 
         return Response(self.response_format, status=self.response_format["status_code"])

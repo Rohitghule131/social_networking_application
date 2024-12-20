@@ -3,3 +3,8 @@ REQUEST_STATUS = (
     ("ACCEPTED", "ACCEPTED"),
     ("REJECTED", "REJECTED")
 )
+
+LINK_TYPE = (
+    ("IMAGE", "IMAGE"),
+    ("PDF", "PDF")
+)

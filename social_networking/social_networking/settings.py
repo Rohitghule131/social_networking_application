@@ -26,24 +26,25 @@ SECRET_KEY = 'django-insecure-+znf3k!$z40y1x6b+xrixa1tg8uubc4)5zspq1xe-s*0k1b-tq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    "corsheaders",
     'rest_framework',
-    'users'
+    'users',
+    'chat',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +53,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://192.168.33.148:3000"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTIACTION_CLASSES': (
@@ -85,6 +89,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'social_networking.wsgi.application'
+ASGI_APPLICATION = "social_networking.asgi.application"
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -94,8 +99,12 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'social-networking',
+        'USER': 'postgres',
+        'PASSWORD': 'rootadmin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -157,4 +166,13 @@ SIMPLE_JWT = {
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("127.0.0.1", 6379)],  # Replace with your Redis server configuration
+        },
+    },
 }
